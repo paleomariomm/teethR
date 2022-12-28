@@ -1,6 +1,7 @@
 predict_perikymata <- function(data,
                                tooth = c("I", "C", "P", "M"),
-                               n_decils = c("1", "2", "3")) {
+                               n_decils = c("1", "2", "3"),
+                               decimals = 1) {
   if(missing(data)) stop("There is no data.")
   if(missing(tooth)) stop("A tooth type is required. I: incisors; C: canines; P: premolars; M: molars.")
   if(missing(n_decils)) stop("You must select the number of decils to predict. 1: one decil (DC1); 2: two decils (DC1-DC2); 3: three decils (DC1-DC2-DC3).")
@@ -146,6 +147,6 @@ predict_perikymata <- function(data,
                         DC3 = as.data.frame(DC3))
   }
 
-  prediction <- round(prediction, 1) # 1 decimal
+  prediction <- round(prediction, decimals) # 1 decimal by default
   return(prediction)
 }
