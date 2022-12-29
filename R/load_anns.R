@@ -1,3 +1,4 @@
+# test to load_anns
 load_anns <- function() {
   ann_incisor_1_DC1    <- readRDS("https://github.com/paleomariomm/teethR/tree/master/ann_models/ann_incisor_1_DC1.rda")
   ann_canine_1_DC1     <- readRDS("https://github.com/paleomariomm/teethR/tree/master/ann_models/ann_canine_1_DC1.rda")
