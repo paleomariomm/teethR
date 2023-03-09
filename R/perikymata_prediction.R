@@ -321,7 +321,7 @@ pred_pk <- function(data,
   return(prediction)
 }
 
-pred_pk(data = data2, tooth = "C", n_decils = "1", decimals = 6)
+pred_pk(data = data3, tooth = "M", n_decils = "3", decimals = 6)
 
 
 
