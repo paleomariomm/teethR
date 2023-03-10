@@ -4,7 +4,7 @@ perikymata_prediction <- function(data,
                     decimals = 1) {
   # Requirements
   # source("R/pre_mdl.R")
-  source("R/preproc.R")
+  source("preproc.R")
   require(dplyr)
   require(caret)
   pre_mdl()
