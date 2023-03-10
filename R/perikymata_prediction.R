@@ -1,39 +1,4 @@
-data1 <- data.frame(
-  DC2  = c( 8, 8, 3),
-  DC3  = c(12, 9, 5),
-  DC4  = c(15,11, 7),
-  DC5  = c(16,11,12),
-  DC6  = c(14,15,15),
-  DC7  = c(17,18,18),
-  DC8  = c(18,31,21),
-  DC9  = c(19,36,24),
-  DC10 = c(29,29,25))
-
-data2 <- data.frame(
-  DC3  = c(12,9,5),
-  DC4  = c(15,11,7),
-  DC5  = c(16,11,12),
-  DC6  = c(14,15,15),
-  DC7  = c(17,18,18),
-  DC8  = c(18,31,21),
-  DC9  = c(19,36,24),
-  DC10 = c(29,29,25))
-
-data3 <- data.frame(
-  DC4  = c(7,10,7),
-  DC5  = c(11,10,7),
-  DC6  = c(12,12,7),
-  DC7  = c(14,9,10),
-  DC8  = c(23,12,11),
-  DC9  = c(17,17,12),
-  DC10 = c(22,19,17))
-
-source("R/pre_mdl.R")
-source("R/preproc.R")
-library(dplyr)
-library(caret)
-
-pred_pk <- function(data,
+perikymata_prediction <- function(data,
                     tooth = c("I", "C", "P", "M"),
                     n_decils = c("1", "2", "3"),
                     decimals = 1) {
@@ -320,9 +285,6 @@ pred_pk <- function(data,
   prediction <- round(prediction, decimals) # 1 decimal by default
   return(prediction)
 }
-
-pred_pk(data = data3, tooth = "M", n_decils = "3", decimals = 6)
-
 
 
 

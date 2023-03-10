@@ -1,3 +1,4 @@
+pre_mdl <- function(){
 pre_mdl_I <- structure(list(dim = c(26L, 10L), bc = NULL, yj = NULL, et = NULL,
                             invHyperbolicSine = NULL, mean = c(DC1 = 9.38461538461539,
                                                                DC2 = 10.3846153846154, DC3 = 10.0769230769231, DC4 = 10.9615384615385,
@@ -73,3 +74,4 @@ pre_mdl_M <- structure(list(dim = c(34L, 10L), bc = NULL, yj = NULL, et = NULL,
                                                                                                                             ...)
                                                                            UseMethod("mean"), bagImp = NULL, median = NULL, data = NULL,
                             rangeBounds = c(0, 1)), class = "preProcess")
+}
