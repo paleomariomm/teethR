@@ -5,6 +5,7 @@ Version: 0.1.0
 Author: Mario Modesto-Mata (modestomata.com)
 Maintainer: Mario Modesto-Mata <paleomariomm@gmail.com>
 Description: Reconstruct crown heights and estimate perikymata counts to calculate crown formation times. These variables are key for evolutionary and paleobiological studies.
-License: GPL v3.0
+License: `use_gpl3_license()`
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.2.3

@@ -1,3 +1,13 @@
+#' Predict perikymata counts in worn human teeth
+#'
+#' @param data a data.frame with the perikymata counts in the decils that are preserved in the tooth.
+#' @param tooth a character representing the tooth type to predict perikymata. Only four tooth types are available: "I" Incisors, "C" Canines, "P" Premolars, "M" Molars
+#' @param n_decils a character representing the number of decils to predict perikymata. Only three options are available: "1" predicts perikymata in DC1, "2" predicts perikymata in DC1 and DC2, "3" predicts perikymata in DC1, DC2 and DC3.
+#' @param decimals a numeric to indicate the number of decimals for the perikymata number. By default it is set to 1.
+#' @return a data.frame with the perikymata prediction per decil.
+#' @details Reconstruct crown heights and estimate perikymata counts to calculate crown formation times. These variables are key for evolutionary and paleobiological studies.
+#' @export
+
 perikymata_prediction <- function(data,
                     tooth = c("I", "C", "P", "M"),
                     n_decils = c("1", "2", "3"),
