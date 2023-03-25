@@ -1,13 +1,3 @@
-#' Reconstructing slightly worn human teeth
-#'
-#' @param image_url Set the URL of the image of the tooth you would like to reconstruct
-#' @param tooth_type set the tooth type
-#' @param interval set the interval of the regression: prediction / confidence
-#' @param save_svg select if the ggplot should be saved or not as SVG format: yes / no
-#' @return a ggplot object with the regression equation
-#' @details Reconstructing slightly worn human teeth
-#' @export
-
 crown_height_recons_2d <- function(image_url,
                    tooth_type = c("UI", "UC", "UP", "UM", "LI", "LC", "LP", "LM"),
                    interval = c("prediction", "confidence"),
@@ -34,6 +24,16 @@ crown_height_recons_2d <- function(image_url,
   # Removing quotation marks from tooth_type
   tooth_type <- noquote(tooth_type)
 
+  # XY proportion per tooth type
+  index_tooth <- list(UI = 0.5928,
+                      LI = 0.6583,
+                      UC = 0.5980,
+                      LC = 0.5840,
+                      UP = 0.6406,
+                      LP = 0.6290,
+                      UM = 0.7456,
+                      LM = 0.6698)
+
   # Select points in the image
   img <- load.image(image_url)
   X11()
@@ -46,9 +46,9 @@ crown_height_recons_2d <- function(image_url,
   out_enamel <- locator(n = 1, type = "o", col = "blue")
   points(out_enamel, pch = 4, col = "blue", cex = 2)
 
-  # Data frame of XY coordinates of dentine horn (dh) and outer enamel (oe)
-  dh <-unlist(cusp_tip)   # dentine horn
-  oe <-unlist(out_enamel) # outer enamel
+  # Data frame of XY coordinates of cusp_tip and outer_enamel
+  dh <-unlist(cusp_tip)
+  oe <-unlist(out_enamel)
   landmark_XY <- data.frame(rbind(dh, oe))
 
   # Get image dimensions and isolate some coordinates from landmark_XY
@@ -57,16 +57,6 @@ crown_height_recons_2d <- function(image_url,
   xpr100 <- landmark_XY[2,1]    # X coordinate of the Xprotoconid 100
   xpr0   <- landmark_XY[1,1]    # X coordinate of the Xprotoconid 0 (dentine horn)
   ypr0   <- landmark_XY[1,2]    # Y coordinate of the Yprotoconid 0 (dentine horn)
-
-  # XY proportion per tooth type
-  index_tooth <- list(UI = 0.5928,
-                      LI = 0.6583,
-                      UC = 0.5980,
-                      LC = 0.5840,
-                      UP = 0.6406,
-                      LP = 0.6290,
-                      UM = 0.7456,
-                      LM = 0.6698)
 
   # Resize and position of background image
   rG <- rasterGrob(img, interpolate = F,
@@ -80,13 +70,12 @@ crown_height_recons_2d <- function(image_url,
   # Prediction intervals
   mpi = cbind(data.frame(xy_coord_stack[[tooth_type]]), predict(poly_reg, interval = "prediction"))
 
-  # ggplot images depending on the interval selected:
+  # ggplot images depending on the interval selected
   gg <- if(interval == "confidence") {
     # Plot regression with the fitted microCT image of the tooth (confidence interval)
     ggc <- ggplot(data.frame(xy_coord_stack[[tooth_type]]), aes(x = X, y = Y)) +
       coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
-      annotation_custom(rG,
-                        xmin = 0, xmax=Inf,
+      annotation_custom(rG, xmin = 0, xmax=Inf,
                         ymin = 0, ymax=Inf) +
       geom_point(alpha = .20, size = 1, shape = 19, color = "red") +
       stat_smooth(method = 'lm', formula = y ~ poly(x, 3)) +
@@ -99,12 +88,12 @@ crown_height_recons_2d <- function(image_url,
     # Plot regression with the fitted microCT image of the tooth (prediction interval)
     ggp <- ggplot(mpi, aes(x = X, y = Y)) +
       coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
-      annotation_custom(rG,
-                        xmin = 0, xmax=Inf,
+      annotation_custom(rG, xmin = 0, xmax=Inf,
                         ymin = 0, ymax=Inf) +
       geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "gray", alpha = 0.5) +
       geom_point(alpha = .20, size = 1, shape = 19, color = "red") +
       geom_line(aes(y = fit), colour = "blue", size = 1) +
+      #stat_smooth(method = 'lm', formula = y ~ poly(x, 3)) +
       theme_minimal() +
       geom_hline(aes(yintercept = 0), color = "red", lty = 2) +
       geom_vline(aes(xintercept = 0), color = "red", lty = 2) +
