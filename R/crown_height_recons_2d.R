@@ -3,7 +3,9 @@
 #' @param image_url Set the URL of the image of the tooth you would like to reconstruct
 #' @param tooth_type set the tooth type
 #' @param interval set the interval of the regression: prediction / confidence
+#' @param color_points select the color of the points of the regression equation ggplot. Default = "red"
 #' @param save_svg select if the ggplot should be saved or not as SVG format: yes / no
+#' @param file_name_svg if save_svg = "yes", this argument indicates the name of the resulting svg file. Default = "tooth_recons.svg"
 #' @return a ggplot object with the regression equation
 #' @details Reconstructing slightly worn human teeth
 #' @export
@@ -11,13 +13,19 @@
 crown_height_recons_2d <- function(image_url,
                    tooth_type = c("UI", "UC", "UP", "UM", "LI", "LC", "LP", "LM"),
                    interval = c("prediction", "confidence"),
-                   save_svg = c("yes", "no")) {
+                   color_points = "red",
+                   save_svg = c("yes", "no"),
+                   file_name_svg = "tooth_recons.svg"
+                   ) {
 
   # Load required packages
   require(imager)
   require(grid)
   require(ggplot2)
   require(svglite)
+  require(png)
+  library(cowplot)
+  library(magick)
 
   # Load data of the polynomial regressions
   load("data/xy_coord_stack.rda")
@@ -45,6 +53,7 @@ crown_height_recons_2d <- function(image_url,
   mtext("Step 2. Select outer enamel surface over the red line (1 click)", line = 0.5)
   out_enamel <- locator(n = 1, type = "o", col = "blue")
   points(out_enamel, pch = 4, col = "blue", cex = 2)
+  dev.off()
 
   # Data frame of XY coordinates of dentine horn (dh) and outer enamel (oe)
   dh <-unlist(cusp_tip)   # dentine horn
@@ -58,6 +67,9 @@ crown_height_recons_2d <- function(image_url,
   xpr0   <- landmark_XY[1,1]    # X coordinate of the Xprotoconid 0 (dentine horn)
   ypr0   <- landmark_XY[1,2]    # Y coordinate of the Yprotoconid 0 (dentine horn)
 
+  image_dimension <- data.frame(width = img_wd_px, height = img_hg_px)
+  rownames(image_dimension) <- image_url
+
   # XY proportion per tooth type
   index_tooth <- list(UI = 0.5928,
                       LI = 0.6583,
@@ -67,12 +79,6 @@ crown_height_recons_2d <- function(image_url,
                       LP = 0.6290,
                       UM = 0.7456,
                       LM = 0.6698)
-
-  # Resize and position of background image
-  rG <- rasterGrob(img, interpolate = F,
-                  hjust = (xpr0 + (xpr100 - xpr0)/2) / img_wd_px,
-                  vjust = 1 - (ypr0 / img_hg_px) + ((((xpr100-xpr0)/img_hg_px) * index_tooth[[tooth_type]]) / 2),
-                  width = 1 / ((xpr100 - xpr0) / img_wd_px))
 
   # Polynomial regression
   poly_reg <- lm(Y ~ X + I(X^2) + I(X^3), data = data.frame(xy_coord_stack[[tooth_type]]))
@@ -85,12 +91,9 @@ crown_height_recons_2d <- function(image_url,
     # Plot regression with the fitted microCT image of the tooth (confidence interval)
     ggc <- ggplot(data.frame(xy_coord_stack[[tooth_type]]), aes(x = X, y = Y)) +
       coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
-      annotation_custom(rG,
-                        xmin = 0, xmax=Inf,
-                        ymin = 0, ymax=Inf) +
-      geom_point(alpha = .20, size = 1, shape = 19, color = "red") +
+      geom_point(alpha = .20, size = 0.5, shape = 16, color = color_points) +
       stat_smooth(method = 'lm', formula = y ~ poly(x, 3)) +
-      theme_minimal() +
+      theme_void() +
       geom_hline(aes(yintercept = 0), color = "red", lty = 2) +
       geom_vline(aes(xintercept = 0), color = "red", lty = 2) +
       scale_x_continuous(limits = c(0, 100), expand = c(0, 0)) +
@@ -99,25 +102,46 @@ crown_height_recons_2d <- function(image_url,
     # Plot regression with the fitted microCT image of the tooth (prediction interval)
     ggp <- ggplot(mpi, aes(x = X, y = Y)) +
       coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
-      annotation_custom(rG,
-                        xmin = 0, xmax=Inf,
-                        ymin = 0, ymax=Inf) +
       geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "gray", alpha = 0.5) +
-      geom_point(alpha = .20, size = 1, shape = 19, color = "red") +
+      geom_point(alpha = .20, size = 0.5, shape = 16, color = color_points) +
       geom_line(aes(y = fit), colour = "blue", size = 1) +
-      theme_minimal() +
+      theme_void() +
       geom_hline(aes(yintercept = 0), color = "red", lty = 2) +
       geom_vline(aes(xintercept = 0), color = "red", lty = 2) +
       scale_x_continuous(limits = c(0, 100), expand = c(0, 0)) +
       scale_y_continuous(limits = c(0, 100), expand = c(0, 0))
     }
 
+  # Calculate proportions of plot width and height compared to image width and height
+  difpr_x <- xpr100-xpr0 # distancia en px entre xpr100 y xpr0.
+  prop_x  <- difpr_x / img_wd_px # proporción de difpr vs. la anchura de la imagen en px
+  difpr_y <- difpr_x * index_tooth[[tooth_type]] # altura en pixeles de Y (entre y0 e y100, teniendo en cuenta proporción con X)
+  prop_y  <- difpr_y / img_hg_px # proporción de difpr vs. la anchura de la imagen en px
+  prop <- c(prop_x,prop_y) # construimos vector con las dos proporciones
+  prop_mx <- max(prop) # seleccionamos la mayor proporción para luego escalar ggplot en la imagen en base a altura/anchura
+
+  # Con este código abrimos ventana con justo el tamaño de la imagen de CT con la que trabajemos
+  # https://stackoverflow.com/questions/2129952/creating-a-plot-window-of-a-particular-size
+  dev.new(width = img_wd_px, height = img_hg_px, unit = "px", noRStudioGD = TRUE)
+  ggoverlap <- ggdraw() +
+    draw_image(image_url) +
+    draw_plot(gg,
+              scale = prop_mx,
+              x = (xpr0 / img_wd_px) - 0.5 + prop_x/2,
+              y = 0.5 - (ypr0 / img_hg_px) + prop_y/2)
+
   # Wether the plot should be saved as SVG file or not
   if(save_svg == "yes") {
-    ggsave(file="recons_tooth.svg", plot = gg)
-  } else {}
+    ggsave(file = file_name_svg, plot = ggoverlap)
+    dev.off()
+  } else {
+    dev.off()
+  }
 
   # Return a list of objects
+  dev.new(width = img_wd_px, height = img_hg_px, unit = "px", noRStudioGD = TRUE)
   return(list("XY_Coordinates" = landmark_XY,
-              "ggplot" = gg))
+              "image_dimension_px" = image_dimension,
+              "prop_regression_xy" = data.frame(Tooth_type = tooth_type, Proportion = index_tooth[[tooth_type]]),
+              "overlap_regression_tooth" = ggoverlap))
 }
