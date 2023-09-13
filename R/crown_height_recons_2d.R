@@ -12,8 +12,8 @@
 
 crown_height_recons_2d <- function(image_url,
                    tooth_type = c("UI", "UC", "UP", "UM", "LI", "LC", "LP", "LM"),
-                   interval = c("prediction", "confidence"),
                    color_points = "red",
+                   color_regression_line = "blue",
                    save_svg = c("yes", "no"),
                    file_name_svg = "tooth_recons.svg"
                    ) {
@@ -36,7 +36,6 @@ crown_height_recons_2d <- function(image_url,
 
   # Check if tooth_type, interval and save_svg have one of the valid values
   tooth_type <- match.arg(tooth_type)
-  interval   <- match.arg(interval)
   save_svg   <- match.arg(save_svg)
 
   # Removing quotation marks from tooth_type
@@ -83,34 +82,16 @@ crown_height_recons_2d <- function(image_url,
   # Polynomial regression
   poly_reg <- lm(Y ~ X + I(X^2) + I(X^3), data = data.frame(xy_coord_stack[[tooth_type]]))
 
-  # Prediction intervals
-  mpi = cbind(data.frame(xy_coord_stack[[tooth_type]]), predict(poly_reg, interval = "prediction"))
-
   # ggplot images depending on the interval selected:
-  gg <- if(interval == "confidence") {
-    # Plot regression with the fitted microCT image of the tooth (confidence interval)
-    ggc <- ggplot(data.frame(xy_coord_stack[[tooth_type]]), aes(x = X, y = Y)) +
-      coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
-      geom_point(alpha = .20, size = 0.5, shape = 16, color = color_points) +
-      stat_smooth(method = 'lm', formula = y ~ poly(x, 3)) +
-      theme_void() +
-      geom_hline(aes(yintercept = 0), color = "red", lty = 2) +
-      geom_vline(aes(xintercept = 0), color = "red", lty = 2) +
-      scale_x_continuous(limits = c(0, 100), expand = c(0, 0)) +
-      scale_y_continuous(limits = c(0, 100), expand = c(0, 0))
-    } else {
-    # Plot regression with the fitted microCT image of the tooth (prediction interval)
-    ggp <- ggplot(mpi, aes(x = X, y = Y)) +
-      coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
-      geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "gray", alpha = 0.5) +
-      geom_point(alpha = .20, size = 0.5, shape = 16, color = color_points) +
-      geom_line(aes(y = fit), colour = "blue", size = 1) +
-      theme_void() +
-      geom_hline(aes(yintercept = 0), color = "red", lty = 2) +
-      geom_vline(aes(xintercept = 0), color = "red", lty = 2) +
-      scale_x_continuous(limits = c(0, 100), expand = c(0, 0)) +
-      scale_y_continuous(limits = c(0, 100), expand = c(0, 0))
-    }
+  gg <- ggplot(data.frame(xy_coord_stack[[tooth_type]]), aes(x = X, y = Y)) +
+          coord_fixed(ratio = index_tooth[[tooth_type]]) + # aquí poner la proporción por diente
+          geom_point(alpha = .20, size = 0.5, shape = 16, color = color_points) +
+          stat_smooth(method = 'lm', formula = y ~ poly(x, 3), color = color_regression_line) +
+          theme_void() +
+          geom_hline(aes(yintercept = 0), color = "red", lty = 2) +
+          geom_vline(aes(xintercept = 0), color = "red", lty = 2) +
+          scale_x_continuous(limits = c(0, 100), expand = c(0, 0)) +
+          scale_y_continuous(limits = c(0, 100), expand = c(0, 0))
 
   # Calculate proportions of plot width and height compared to image width and height
   difpr_x <- xpr100-xpr0 # distancia en px entre xpr100 y xpr0.

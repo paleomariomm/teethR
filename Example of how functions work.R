@@ -22,7 +22,7 @@ perikymata_prediction(perikymata_example, tooth = "P", n_decils = "3", decimals 
 
 ### EXAMPLE RECONSTRUCTION
 
-crown_height_recons_2d("images/molar2.jpg", tooth_type = "LM", interval = "confidence", save_svg = "yes", color_points = "darkblue")
+crown_height_recons_2d("images/molar2.jpg", tooth_type = "LM", save_svg = "yes", color_points = "green", color_regression_line = "yellow")
 
 
 
