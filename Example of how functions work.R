@@ -1,5 +1,21 @@
+devtools::install_github('paleomariomm/teethR')
+library(teethR)
+
+### Reconstruction of crown height
+
+crown_height_recons_2d("images/premolar.png", 
+                       tooth_type = "LP", 
+                       save_svg = "yes",
+                       color_points = "red",
+                       color_regression_line = "green",
+                       file_name_svg = "tooth_recons2.svg")
+
+### Perikymata prediction when 1 decil is not present 
+
 perikymata_example <- data.frame(
-  DC4  = c(9),
+  DC2  = c(10),
+  DC3  = c(10),
+  DC4  = c(11),
   DC5  = c(11),
   DC6  = c(14),
   DC7  = c(17),
@@ -10,19 +26,7 @@ perikymata_example <- data.frame(
 # rownames(perikymata_example) <- c("OMO 25-5", "L 51-54", "MISSING")
 
 perikymata_prediction(perikymata_example,
-                   tooth = "C",
-                   n_decils = "3",
-                   decimals = 2)
-
-library(devtools)
-devtools::install_github('paleomariomm/teethR')
-library(teethR)
-
-perikymata_prediction(perikymata_example, tooth = "P", n_decils = "3", decimals = 3)
-
-### EXAMPLE RECONSTRUCTION
-
-crown_height_recons_2d("images/molar2.jpg", tooth_type = "LM", save_svg = "yes", color_points = "green", color_regression_line = "yellow")
-
-
+                      tooth = "P",
+                      n_decils = "2",
+                      decimals = 1)
 

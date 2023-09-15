@@ -6,7 +6,7 @@
 #' @param color_points select the color of the points of the regression equation ggplot. Default = "red"
 #' @param save_svg select if the ggplot should be saved or not as SVG format: yes / no
 #' @param file_name_svg if save_svg = "yes", this argument indicates the name of the resulting svg file. Default = "tooth_recons.svg"
-#' @return a ggplot object with the regression equation
+#' @return a ggplot object with the regression equation placed appropriately in the region of interest
 #' @details Reconstructing slightly worn human teeth
 #' @export
 
