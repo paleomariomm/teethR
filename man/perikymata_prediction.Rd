@@ -45,6 +45,6 @@ perikymata_example <- data.frame(
 # Running the function to predict perikymata number in the first decile (DC1) of this dummy premolar.
 perikymata_prediction(perikymata_example,
                       tooth = "P",
-                      n_decils = "1",
+                      n_deciles = "1",
                       decimals = 1)
 }

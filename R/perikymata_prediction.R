@@ -21,7 +21,7 @@
 #' # Running the function to predict perikymata number in the first decile (DC1) of this dummy premolar.
 #' perikymata_prediction(perikymata_example,
 #'                       tooth = "P",
-#'                       n_decils = "1",
+#'                       n_deciles = "1",
 #'                       decimals = 1)
 #' @details Reconstruct crown heights and estimate perikymata counts to calculate crown formation times. These variables are key for evolutionary and paleobiological studies.
 #' @export
