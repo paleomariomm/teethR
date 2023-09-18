@@ -113,7 +113,7 @@ crown_height_recons_2d <- function(image_url,
 
   # Wether the plot should be saved as SVG file or not
   if(save_svg == "yes") {
-    ggsave(file = file_name_svg, plot = ggoverlap)
+    ggsave(file = file_name_svg, plot = ggoverlap, limitsize = FALSE)
     dev.off()
   } else {
     dev.off()
