@@ -5,6 +5,21 @@
 #' @param n_deciles a character representing the number of deciles to predict perikymata. Only three options are available: "1" predicts perikymata in DC1, "2" predicts perikymata in DC1 and DC2, "3" predicts perikymata in DC1, DC2 and DC3.
 #' @param decimals a numeric to indicate the number of decimals for the perikymata number. By default it is set to 1.
 #' @return a data.frame with the perikymata prediction per decil.
+#' @example perikymata_example <- data.frame(
+#'   DC2  = c(10),
+#'   DC3  = c(10),
+#'   DC4  = c(11),
+#'   DC5  = c(11),
+#'   DC6  = c(14),
+#'   DC7  = c(17),
+#'   DC8  = c(19),
+#'   DC9  = c(21),
+#'   DC10 = c(21))
+#'
+#' perikymata_prediction(perikymata_example,
+#'                       tooth = "P",
+#'                       n_decils = "1",
+#'                       decimals = 1)
 #' @details Reconstruct crown heights and estimate perikymata counts to calculate crown formation times. These variables are key for evolutionary and paleobiological studies.
 #' @export
 
