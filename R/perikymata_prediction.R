@@ -5,7 +5,8 @@
 #' @param n_deciles a character representing the number of deciles to predict perikymata. Only three options are available: "1" predicts perikymata in DC1, "2" predicts perikymata in DC1 and DC2, "3" predicts perikymata in DC1, DC2 and DC3.
 #' @param decimals a numeric to indicate the number of decimals for the perikymata number. By default it is set to 1.
 #' @return a data.frame with the perikymata prediction per decil.
-#' @example # Creation of a dummy dataframe of a tooth with perikymata from DC2 to DC10
+#' @examples
+#' # Creation of a dummy dataframe of a premolar with perikymata from DC2 to DC10
 #' perikymata_example <- data.frame(
 #'   DC2  = c(10),
 #'   DC3  = c(10),
@@ -16,6 +17,7 @@
 #'   DC8  = c(19),
 #'   DC9  = c(21),
 #'   DC10 = c(21))
+#'
 #' # Running the function to predict perikymata number in the first decile (DC1) of this dummy premolar.
 #' perikymata_prediction(perikymata_example,
 #'                       tooth = "P",

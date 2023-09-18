@@ -37,9 +37,9 @@ Reconstructing slightly worn human teeth
 }
 \examples{
 crown_height_recons_2d("images/premolar.png",
-tooth_type = "LP",
-save_svg = "yes",
-color_points = "red",
-color_regression_line = "blue",
-file_name_svg = "tooth_recons.svg")
+  tooth_type = "LP",
+  save_svg = "yes",
+  color_points = "red",
+  color_regression_line = "blue",
+  file_name_svg = "tooth_recons.svg")
 }

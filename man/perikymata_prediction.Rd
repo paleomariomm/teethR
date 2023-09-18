@@ -29,3 +29,22 @@ Predict perikymata counts in worn human teeth
 \details{
 Reconstruct crown heights and estimate perikymata counts to calculate crown formation times. These variables are key for evolutionary and paleobiological studies.
 }
+\examples{
+# Creation of a dummy dataframe of a premolar with perikymata from DC2 to DC10
+perikymata_example <- data.frame(
+  DC2  = c(10),
+  DC3  = c(10),
+  DC4  = c(11),
+  DC5  = c(11),
+  DC6  = c(14),
+  DC7  = c(17),
+  DC8  = c(19),
+  DC9  = c(21),
+  DC10 = c(21))
+
+# Running the function to predict perikymata number in the first decile (DC1) of this dummy premolar.
+perikymata_prediction(perikymata_example,
+                      tooth = "P",
+                      n_decils = "1",
+                      decimals = 1)
+}
