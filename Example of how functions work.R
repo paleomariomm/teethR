@@ -3,14 +3,16 @@ library(teethR)
 
 ### Reconstruction of crown height
 
-crown_height_recons_2d("images/premolar.png", 
-                       tooth_type = "LP", 
+crown_height_recons_2d("images/premolar.png",
+                       tooth_type = "LP",
                        save_svg = "yes",
                        color_points = "red",
-                       color_regression_line = "green",
-                       file_name_svg = "tooth_recons2.svg")
+                       color_regression_line = "blue",
+                       file_name_svg = "tooth_recons.svg")
 
-### Perikymata prediction when 1 decil is not present 
+### Perikymata prediction when 1 decil is not present
+library(teethR)
+
 
 perikymata_example <- data.frame(
   DC2  = c(10),
@@ -23,10 +25,8 @@ perikymata_example <- data.frame(
   DC9  = c(21),
   DC10 = c(21))
 
-# rownames(perikymata_example) <- c("OMO 25-5", "L 51-54", "MISSING")
-
 perikymata_prediction(perikymata_example,
                       tooth = "P",
-                      n_decils = "2",
+                      n_decils = "1",
                       decimals = 1)
 

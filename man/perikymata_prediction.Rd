@@ -7,16 +7,16 @@
 perikymata_prediction(
   data,
   tooth = c("I", "C", "P", "M"),
-  n_decils = c("1", "2", "3"),
+  n_deciles = c("1", "2", "3"),
   decimals = 1
 )
 }
 \arguments{
-\item{data}{a data.frame with the perikymata counts in the decils that are preserved in the tooth.}
+\item{data}{a data.frame with the perikymata counts in the deciles that are preserved in the tooth.}
 
 \item{tooth}{a character representing the tooth type to predict perikymata. Only four tooth types are available: "I" Incisors, "C" Canines, "P" Premolars, "M" Molars}
 
-\item{n_decils}{a character representing the number of decils to predict perikymata. Only three options are available: "1" predicts perikymata in DC1, "2" predicts perikymata in DC1 and DC2, "3" predicts perikymata in DC1, DC2 and DC3.}
+\item{n_deciles}{a character representing the number of deciles to predict perikymata. Only three options are available: "1" predicts perikymata in DC1, "2" predicts perikymata in DC1 and DC2, "3" predicts perikymata in DC1, DC2 and DC3.}
 
 \item{decimals}{a numeric to indicate the number of decimals for the perikymata number. By default it is set to 1.}
 }
