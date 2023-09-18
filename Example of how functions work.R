@@ -1,7 +1,9 @@
+# Install and load package
+
 devtools::install_github('paleomariomm/teethR')
 library(teethR)
 
-### Reconstruction of crown height
+# Reconstruction of crown height
 
 crown_height_recons_2d("images/premolar.png",
                        tooth_type = "LP",
@@ -10,9 +12,7 @@ crown_height_recons_2d("images/premolar.png",
                        color_regression_line = "blue",
                        file_name_svg = "tooth_recons.svg")
 
-### Perikymata prediction when 1 decil is not present
-library(teethR)
-
+# Perikymata prediction when 1 decil is not present
 
 perikymata_example <- data.frame(
   DC2  = c(10),
