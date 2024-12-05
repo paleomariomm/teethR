@@ -2,6 +2,7 @@
 
 export(crown_height_recons_2d)
 export(exportPreds)
+export(perikymata_fossil_pred)
 export(perikymata_prediction)
 export(postProcess.pred)
 export(unPreProc)
